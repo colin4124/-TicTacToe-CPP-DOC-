@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>井子棋（Tic Tac Toe）C++ 实现 &mdash; TicTacToe-CPP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/UItoTop/css/ui.totop.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/UItoTop/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="_static/UItoTop/js/easing.js"></script>
+    <script type="text/javascript" src="_static/UItoTop/js/jquery.ui.totop.min.js"></script>
+    <link rel="top" title="TicTacToe-CPP 0.0.1 documentation" href="#" />
+    <link rel="next" title="1. 棋盘界面" href="step1/index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+  
+  
+  <div class=indexwrapper>
+  
+    
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="step1/index.html" title="1. 棋盘界面"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">TicTacToe-CPP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tic-tac-toe-c">
+<h1>井子棋（Tic Tac Toe）C++ 实现<a class="headerlink" href="#tic-tac-toe-c" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/Tic_Tac_Toe.gif" class="floatingflask" src="_images/Tic_Tac_Toe.gif" />
+<p>用 C++ 实现的井子棋程序。从无到有，从最初的输出界面到完整的程序，咧威把编写软件的想法和思路全部都记录下来。阅读的时候，可以看了咧威的想法之后，基于一些代码片段，自己实现完整的井子棋。当然，如果实在写不出来，可以参考咧威完整的代码。Welcome to fix bug and fork me !</p>
+<p><a class="reference external" href="https://gitcafe.com/Tyustca-Project/TicTacToe-CPP/tarball/master">下载源码</a></p>
+<p><a class="reference external" href="https://gitcafe.com/Tyustca-Project/TicTacToe-CPP">Fork me on GitCafe</a></p>
+</div>
+<div class="section" id="id2">
+<h1>目录<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="step1/index.html">1. 棋盘界面</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step1/index.html#id2">1.1 方法一</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step1/index.html#id3">1.2 本阶段完整代码</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step2/index.html">2. 计算机循环下棋</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id2">2.1 实现下棋功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id3">2.2 随机下棋</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id4">2.3 计算机交替下棋</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id5">2.4 循环输出下棋的每一步</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id6">2.5 判断棋盘存在棋子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id7">2.6 判断输赢</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id9">2.7 改善界面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2/index.html#id10">2.8 本阶段完整代码</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step3/index.html">3 增加交互功能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id2">3.1 用户选择棋子</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id3">3.2 给出提示的棋盘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id4">3.3 用户下棋</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id5">3.4 重新实现计算机下棋</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id6">3.5 计数下了几轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id7">3.6 判断输赢和平局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#id8">3.7 本阶段完整代码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3/index.html#bug">3.8 Bug</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+            <div class="section" id="duoshuo">
+
+    <h2>
+        留言
+        <a class="headerlink" href="#duoshuo" title="永久链接至标题">¶</a>
+    </h2>
+
+    	<!-- Duoshuo Comment BEGIN -->
+		<div class="ds-thread"></div>
+		<script type="text/javascript">
+			var duoshuoQuery = {short_name:"stupidcpp"};
+			(function() {
+			var ds = document.createElement('script');
+			ds.type = 'text/javascript';ds.async = true;
+			ds.src = 'http://static.duoshuo.com/embed.js';
+			ds.charset = 'UTF-8';
+			(document.getElementsByTagName('head')[0] 
+			|| document.getElementsByTagName('body')[0]).appendChild(ds);
+			})();
+		</script>
+		<!-- Duoshuo Comment END -->
+</div>
+ 
+            <script type="text/javascript">
+        $(document).ready(function() {
+            /*
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear' 
+            };
+            */
+            
+            $().UItoTop({ easingType: 'easeOutQuart' });
+            
+            });
+       </script> 
+            
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><h3> 关于井子棋 C++版</h3>
+<p>
+    咧威为 2014 年<a href="http://www.caaigames.cn/index.php">全国大学生计算机博弈大赛</a>做的准备，这个井子棋算是计算机博弈入门的练手作品。在此分享，让大家入门更方便些。
+</p>
+
+<h3>联系方式</h3>
+<li><a href="http://weibo.com/colin4124">@咧威</a></li>
+<li> Email: colin4124@gmail.com </li>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+  <div class="footer">
+    &copy; Copyright 2013, 咧威.
+  </div>
+  
+  </div>
+  
+  
+  </body>
+</html>

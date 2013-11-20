@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. 棋盘界面 &mdash; TicTacToe-CPP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/UItoTop/css/ui.totop.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/easing.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/jquery.ui.totop.min.js"></script>
+    <link rel="top" title="TicTacToe-CPP 0.0.1 documentation" href="../index.html" />
+    <link rel="next" title="2. 计算机循环下棋" href="../step2/index.html" />
+    <link rel="prev" title="井子棋（Tic Tac Toe）C++ 实现" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+  
+  
+    
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../step2/index.html" title="2. 计算机循环下棋"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="井子棋（Tic Tac Toe）C++ 实现"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">TicTacToe-CPP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="step1">
+<span id="id1"></span><h1>1. 棋盘界面<a class="headerlink" href="#step1" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>1.1 方法一<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>先实现简单的棋盘，如图 1.1：</p>
+<img alt="../_images/1.1.png" src="../_images/1.1.png" />
+<p>分析下，这个界面由四行 <tt class="docutils literal"><span class="pre">+---+---+---+</span></tt> ，三行 <tt class="docutils literal"><span class="pre">|</span>&nbsp;&nbsp; <span class="pre">|</span>&nbsp;&nbsp; <span class="pre">|</span>&nbsp;&nbsp; <span class="pre">|</span></tt> 以及左边的空白三部分组成，所以把它们分别存储到三个变量里，这样每次输出就不用敲这些长长的字符，而是用容易记住的变量名代替。</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;string&gt;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+
+     <span class="c1">// 定义棋盘 board</span>
+     <span class="c1">// 分别存储在 boundary（边界）, bar（栏）以及 sidebar（边栏）的变量里</span>
+     <span class="n">string</span> <span class="n">boundary</span> <span class="o">=</span> <span class="s">&quot;+---+---+---+&quot;</span><span class="p">;</span>
+     <span class="n">string</span> <span class="n">bar</span> <span class="o">=</span> <span class="s">&quot;|   |   |   |&quot;</span><span class="p">;</span>
+     <span class="n">string</span> <span class="n">sidebar</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="sc">&#39; &#39;</span><span class="p">);</span> <span class="c1">//空白的左边栏</span>
+
+     <span class="c1">// 输出界面</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>当然，输出界面的代码有很多重复的，可以换成循环输出</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>1.2 本阶段完整代码<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>完整代码位于 /doc/sample/1.1.cpp</p>
+<p><a class="reference external" href="https://gitcafe.com/Tyustca-Project/TicTacToe-CPP/blob/master/doc/sample/1.1.cpp">在线浏览</a></p>
+</div>
+</div>
+
+
+
+            <div class="section" id="duoshuo">
+
+    <h2>
+        留言
+        <a class="headerlink" href="#duoshuo" title="永久链接至标题">¶</a>
+    </h2>
+
+    	<!-- Duoshuo Comment BEGIN -->
+		<div class="ds-thread"></div>
+		<script type="text/javascript">
+			var duoshuoQuery = {short_name:"stupidcpp"};
+			(function() {
+			var ds = document.createElement('script');
+			ds.type = 'text/javascript';ds.async = true;
+			ds.src = 'http://static.duoshuo.com/embed.js';
+			ds.charset = 'UTF-8';
+			(document.getElementsByTagName('head')[0] 
+			|| document.getElementsByTagName('body')[0]).appendChild(ds);
+			})();
+		</script>
+		<!-- Duoshuo Comment END -->
+</div>
+ 
+            <script type="text/javascript">
+        $(document).ready(function() {
+            /*
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear' 
+            };
+            */
+            
+            $().UItoTop({ easingType: 'easeOutQuart' });
+            
+            });
+       </script> 
+            
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="../index.html">
+  <img class="logo" src="../_static/Tic_Tac_Toe.gif" alt="Logo"/>
+</a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. 棋盘界面</a><ul>
+<li><a class="reference internal" href="#id2">1.1 方法一</a></li>
+<li><a class="reference internal" href="#id3">1.2 本阶段完整代码</a></li>
+</ul>
+</li>
+</ul>
+<h3>相关主题</h3>
+<ul>
+  <li><a href="../index.html">文档概述</a><ul>
+      <li>上一个: <a href="../index.html" title="previous chapter">井子棋（Tic Tac Toe）C++ 实现</a></li>
+      <li>下一个: <a href="../step2/index.html" title="next chapter">2. 计算机循环下棋</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/step1/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+  <div class="footer">
+    &copy; Copyright 2013, 咧威.
+  </div>
+  
+  </body>
+</html>
