@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4 重构：使用类 &mdash; TicTacToe-CPP 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/UItoTop/css/ui.totop.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/easing.js"></script>
+    <script type="text/javascript" src="../_static/UItoTop/js/jquery.ui.totop.min.js"></script>
+    <link rel="top" title="TicTacToe-CPP 0.0.1 documentation" href="../index.html" />
+    <link rel="prev" title="3 增加交互功能" href="../step3/index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+  
+  
+    
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../step3/index.html" title="3 增加交互功能"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">TicTacToe-CPP 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="step4">
+<span id="id1"></span><h1>4 重构：使用类<a class="headerlink" href="#step4" title="Permalink to this headline">¶</a></h1>
+<p>之前只是用到了简单的控制结构：for、while、if、switch 等，连函数都没用上。当然，这样的好处是容易把自己的想法先实现了，尽管代码很笨，又丑又长，但是思路清晰，容易理解。能够实现随机的井子棋之后，可以考虑重构代码，进一步抽象化。这里使用了类。</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<div class="section" id="tictactoe">
+<h2>4.1 TicTacToe 类<a class="headerlink" href="#tictactoe" title="Permalink to this headline">¶</a></h2>
+<p>把之前下棋的过程，定义了一个 TicTacToe 类，分割成独立的函数，在类外定义：</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TicTacToe</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">TicTacToe</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">begin_info</span><span class="p">();</span>        <span class="c1">// 输出欢迎信息</span>
+    <span class="kt">void</span> <span class="nf">user_choose</span><span class="p">();</span>       <span class="c1">// 用户下棋</span>
+    <span class="kt">void</span> <span class="nf">computer_choose</span><span class="p">();</span>   <span class="c1">// 计算机下棋</span>
+    <span class="kt">void</span> <span class="nf">judge_win_or_lose</span><span class="p">();</span> <span class="c1">// 判断输赢</span>
+    <span class="kt">void</span> <span class="nf">board_info</span><span class="p">();</span>        <span class="c1">// 棋盘状态</span>
+    <span class="kt">void</span> <span class="nf">play_game</span><span class="p">();</span>         <span class="c1">// 下棋</span>
+
+<span class="nl">private:</span>
+    <span class="cm">/* 定义棋盘 board */</span>
+    <span class="c1">// 分别存储在 boundary（边界）,以及 sidebar（边栏）的变量里</span>
+    <span class="n">string</span> <span class="n">boundary</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">sidebar</span><span class="p">;</span> <span class="c1">//空白的左边栏</span>
+    <span class="n">string</span> <span class="n">split_line</span><span class="p">;</span><span class="c1">// 定义分割线</span>
+    <span class="n">string</span> <span class="n">mark</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="p">;</span> <span class="c1">// 定义棋子标记 mark</span>
+    <span class="n">string</span> <span class="n">user_name</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">bar</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">;</span>  <span class="c1">// 定义输出棋子的行</span>
+    <span class="n">string</span> <span class="n">piece</span><span class="p">;</span> <span class="c1">// 存放用户选择的棋子</span>
+    <span class="kt">int</span> <span class="n">user_x</span><span class="p">,</span> <span class="n">user_y</span><span class="p">,</span> <span class="n">choose_number</span><span class="p">;</span> <span class="c1">// 存放用户的棋子坐标</span>
+    <span class="kt">int</span> <span class="n">computer_x</span><span class="p">,</span> <span class="n">computer_y</span><span class="p">;</span> <span class="c1">// 存放计算机的棋子坐标</span>
+    <span class="kt">int</span> <span class="n">step</span><span class="p">;</span>             <span class="c1">// 计算是第几步</span>
+    <span class="kt">bool</span> <span class="n">win_o</span><span class="p">,</span> <span class="n">win_x</span><span class="p">;</span> <span class="c1">// 判断输赢，是执棋子 O 的还是 X 的赢了</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>4.2 初始化<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>构造函数 <tt class="docutils literal"><span class="pre">TicTacToe()</span></tt> 初始化随机种子值，棋子变量和判断输赢的变量</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">TicTacToe</span><span class="o">::</span><span class="n">TicTacToe</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>       <span class="c1">// 改变随机种子值</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span> <span class="c1">// 初始化棋子为空字符串</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mark</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;   &quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">win_o</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">win_x</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>4.3 欢迎信息<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">begin_info()</span></tt> 输出欢迎信息，并指导用户下棋</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">begin_info</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;你叫什么呀：&quot;</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">user_name</span><span class="p">;</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Hello, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">user_name</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  ^_^&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  选择棋子 O 还是 X ：&quot;</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">piece</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">棋盘如下：&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">boundary</span> <span class="o">=</span> <span class="s">&quot;+---+---+---+&quot;</span><span class="p">;</span>
+    <span class="n">sidebar</span> <span class="o">=</span> <span class="s">&quot;      &quot;</span><span class="p">;</span> <span class="c1">//空白的左边栏</span>
+    <span class="n">split_line</span> <span class="o">=</span> <span class="s">&quot;------&quot;</span><span class="p">;</span><span class="c1">// 定义分割线</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;| &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; |&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;| &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; |&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;| &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; | &quot;</span> <span class="o">&lt;&lt;</span> <span class="mi">9</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; |&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>4.4 用户下棋<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">user_choose</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">请输入下棋的位置序号（1～9）：&quot;</span><span class="p">;</span>          <span class="c1">//用户选择的坐标值</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">choose_number</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">choose_number</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">1</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">4</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">5</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">6</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">7</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">8</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">9</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 判断用户选择的位置是否已经存在棋子</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="n">user_x</span><span class="p">][</span><span class="n">user_y</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">||</span> <span class="n">mark</span><span class="p">[</span><span class="n">user_x</span><span class="p">][</span><span class="n">user_y</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;棋盘上已经存在棋子，请重新输入：&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;请输入下棋的位置序号（1～9）：&quot;</span><span class="p">;</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">choose_number</span><span class="p">;</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">choose_number</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">1</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">2</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">3</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">4</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">5</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">6</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">7</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">8</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">9</span> : <span class="n">user_x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">user_y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>4.5 计算机下棋<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">computer_choose</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">computer_x</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">computer_y</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">// 随机生成坐标值</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="n">computer_x</span><span class="p">][</span><span class="n">computer_y</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&quot;   &quot;</span><span class="p">)</span> <span class="c1">// 判断是否棋盘是否已经存在这个棋子</span>
+    <span class="p">{</span>
+        <span class="n">computer_x</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="n">computer_y</span> <span class="o">=</span> <span class="n">random</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>4.6 判断输赢<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">judge_win_or_lose</span><span class="p">()</span>
+<span class="p">{</span>
+     <span class="c1">// 判断交叉线是否相等</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span> <span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="p">)</span>
+         <span class="n">win_o</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span> <span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="p">)</span>
+         <span class="n">win_x</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span> <span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="p">)</span>
+         <span class="n">win_o</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span> <span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="p">)</span>
+         <span class="n">win_x</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+     <span class="c1">// 判断行和列是否相等</span>
+     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="p">)</span>
+             <span class="n">win_o</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="p">)</span>
+             <span class="n">win_x</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; O &quot;</span> <span class="p">)</span>
+             <span class="n">win_o</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot; X &quot;</span> <span class="p">)</span>
+             <span class="n">win_x</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>4.7 棋盘状态<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">board_info</span><span class="p">()</span>
+<span class="p">{</span>
+     <span class="c1">// 输出每一步下棋的棋盘状态</span>
+     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="n">bar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;|&#39;</span> <span class="o">+</span> <span class="n">mark</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sc">&#39;|&#39;</span> <span class="o">+</span> <span class="n">mark</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="sc">&#39;|&#39;</span> <span class="o">+</span> <span class="n">mark</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="sc">&#39;|&#39;</span> <span class="p">;</span>
+     <span class="p">}</span>
+
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">split_line</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;   第 &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;   &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">step</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sidebar</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;   步 &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">bar</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">split_line</span> <span class="o">&lt;&lt;</span> <span class="n">boundary</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>4.8 下棋<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">void</span> <span class="n">TicTacToe</span><span class="o">::</span><span class="n">play_game</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="n">user_choose</span><span class="p">();</span>
+
+        <span class="n">mark</span><span class="p">[</span><span class="n">user_x</span><span class="p">][</span><span class="n">user_y</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">piece</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="p">)</span>  <span class="c1">// 如果进行到了第五轮，只能是轮到用户下棋</span>
+            <span class="n">computer_choose</span><span class="p">();</span>
+
+        <span class="n">judge_win_or_lose</span><span class="p">();</span>  <span class="c1">// 判断用户是否赢了</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">win_x</span> <span class="o">!=</span> <span class="nb">true</span> <span class="o">&amp;&amp;</span> <span class="n">win_o</span> <span class="o">!=</span> <span class="nb">true</span><span class="p">)</span> <span class="c1">// 如果用户没有赢，则轮到计算机下棋</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">piece</span> <span class="o">==</span> <span class="s">&quot;O&quot;</span><span class="p">)</span>   <span class="c1">// 定义与用户不同的棋子</span>
+                <span class="n">mark</span><span class="p">[</span><span class="n">computer_x</span><span class="p">][</span><span class="n">computer_y</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot; X &quot;</span><span class="p">;</span>
+            <span class="k">else</span>
+                <span class="n">mark</span><span class="p">[</span><span class="n">computer_x</span><span class="p">][</span><span class="n">computer_y</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot; O &quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">judge_win_or_lose</span><span class="p">();</span> <span class="c1">// 判断计算机是否赢了</span>
+
+        <span class="n">board_info</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">win_o</span> <span class="o">||</span> <span class="n">win_x</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">win_o</span> <span class="o">&amp;&amp;</span> <span class="n">piece</span> <span class="o">==</span> <span class="s">&quot;O&quot;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">win_x</span> <span class="o">&amp;&amp;</span> <span class="n">piece</span> <span class="o">==</span> <span class="s">&quot;X&quot;</span><span class="p">)</span> <span class="p">)</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      你赢了 ^_^ </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+            <span class="k">else</span>
+                <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      你输了 &gt;_&lt; </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">// 判断是否平局</span>
+        <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      平局 －_－# </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="main">
+<h2>4.9 main 函数<a class="headerlink" href="#main" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">TicTacToe</span> <span class="n">tictactoe_sample</span><span class="p">;</span>
+    <span class="n">tictactoe_sample</span><span class="p">.</span><span class="n">begin_info</span><span class="p">();</span>
+    <span class="n">tictactoe_sample</span><span class="p">.</span><span class="n">play_game</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>4.10 本阶段完整代码<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>完整代码位于 <tt class="docutils literal"><span class="pre">/doc/sample/4.1.cpp</span></tt></p>
+<p><a class="reference external" href="https://gitcafe.com/Tyustca-Project/TicTacToe-CPP/blob/master/doc/sample/4.1.cpp">在线浏览</a></p>
+</div>
+</div>
+
+
+
+            <div class="section" id="duoshuo">
+
+    <h2>
+        留言
+        <a class="headerlink" href="#duoshuo" title="永久链接至标题">¶</a>
+    </h2>
+
+    	<!-- Duoshuo Comment BEGIN -->
+		<div class="ds-thread"></div>
+		<script type="text/javascript">
+			var duoshuoQuery = {short_name:"stupidcpp"};
+			(function() {
+			var ds = document.createElement('script');
+			ds.type = 'text/javascript';ds.async = true;
+			ds.src = 'http://static.duoshuo.com/embed.js';
+			ds.charset = 'UTF-8';
+			(document.getElementsByTagName('head')[0] 
+			|| document.getElementsByTagName('body')[0]).appendChild(ds);
+			})();
+		</script>
+		<!-- Duoshuo Comment END -->
+</div>
+ 
+            <script type="text/javascript">
+        $(document).ready(function() {
+            /*
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear' 
+            };
+            */
+            
+            $().UItoTop({ easingType: 'easeOutQuart' });
+            
+            });
+       </script> 
+            
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="../index.html">
+  <img class="logo" src="../_static/Tic_Tac_Toe.gif" alt="Logo"/>
+</a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4 重构：使用类</a><ul>
+<li><a class="reference internal" href="#tictactoe">4.1 TicTacToe 类</a></li>
+<li><a class="reference internal" href="#id2">4.2 初始化</a></li>
+<li><a class="reference internal" href="#id3">4.3 欢迎信息</a></li>
+<li><a class="reference internal" href="#id4">4.4 用户下棋</a></li>
+<li><a class="reference internal" href="#id5">4.5 计算机下棋</a></li>
+<li><a class="reference internal" href="#id6">4.6 判断输赢</a></li>
+<li><a class="reference internal" href="#id7">4.7 棋盘状态</a></li>
+<li><a class="reference internal" href="#id8">4.8 下棋</a></li>
+<li><a class="reference internal" href="#main">4.9 main 函数</a></li>
+<li><a class="reference internal" href="#id9">4.10 本阶段完整代码</a></li>
+</ul>
+</li>
+</ul>
+<h3>相关主题</h3>
+<ul>
+  <li><a href="../index.html">文档概述</a><ul>
+      <li>上一个: <a href="../step3/index.html" title="previous chapter">3 增加交互功能</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/step4/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+  <div class="footer">
+    &copy; Copyright 2013, 咧威.
+  </div>
+  
+  </body>
+</html>
